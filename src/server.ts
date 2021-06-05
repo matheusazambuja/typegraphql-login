@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import * as _ from 'lodash';
+import _ from 'lodash';
+import 'dotenv/config'
 
 import './database';
 import express from 'express';
@@ -12,8 +13,8 @@ import { customAuthChecker, customContext } from './auth/auth';
 
 async function bootstrap() {
   const app = express();
-  const path = '/graphql';
-  const port = 4100;
+  const path = process.env.API_GRAPHQL_PATH;
+  const port = process.env.API_GRAPHQL_PORT;
 
   const schema = await buildSchema({
     resolvers: [UserResolver, ProfileResolver],
