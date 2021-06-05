@@ -15,7 +15,7 @@ export async function getUserLogged(user: ILoginUser) {
 
   const { id, name, email } = user;
 
-  const userInfo = {
+  const userData = {
     id, name, email,
     profiles,
     iat: dateNow,
@@ -26,5 +26,5 @@ export async function getUserLogged(user: ILoginUser) {
 
   if (!authSecret) throw new Error('Problema com a senha.');
 
-  return { ...userInfo, token: jwt.encode(userInfo, authSecret) }
+  return { ...userData, token: jwt.encode(userData, authSecret) }
 }

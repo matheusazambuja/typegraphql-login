@@ -2,8 +2,8 @@ import { Field, InputType, ObjectType } from "type-graphql";
 import { ProfileInfo, ProfileInputUpdate } from "../profile/ProfileSchema";
 
 
-@InputType('UserInput')
-class UserInput {
+@InputType('UserDataInput')
+class UserDataInput {
   @Field()
   name: string;
 
@@ -21,7 +21,7 @@ class UserFilter {
 }
 
 @InputType('UserLoginInput')
-class UserLoginInput {
+class LoginUserInput {
   @Field()
   email: string;
 
@@ -29,8 +29,8 @@ class UserLoginInput {
   password: string;
 }
 
-@InputType('UserUpdateInput')
-class UserUpdateInput {
+@InputType('UpdateUserDataInput')
+class UpdateUserDataInput {
   @Field()
   name?: string;
 
@@ -44,8 +44,8 @@ class UserUpdateInput {
   profiles?: ProfileInputUpdate[];
 }
 
-@InputType('newUserAdminInput')
-class newUserAdminInput {
+@InputType('NewUserAdminInput')
+class NewUserAdminInput {
   @Field()
   name: string;
 
@@ -55,18 +55,18 @@ class newUserAdminInput {
   @Field()
   password: string;
 
-  @Field(type => [newUserAdminInputProfiles])
-  profiles: newUserAdminInputProfiles[];
+  @Field(type => [NewUserAdminInputProfiles])
+  profiles: NewUserAdminInputProfiles[];
 }
 
-@InputType('newUserAdminInputProfiles')
-class newUserAdminInputProfiles {
+@InputType('NewUserAdminInputProfiles')
+class NewUserAdminInputProfiles {
   @Field()
   type: string;
 }
 
-@ObjectType('UserInfo')
-class UserInfo {
+@ObjectType('UserData')
+class UserData {
   @Field(type => String)
   id?: string;
 
@@ -80,17 +80,17 @@ class UserInfo {
   profiles?: ProfileInfo[];
 }
 
-@InputType('UpdateUser')
-class UpdateUser {
+@InputType('UpdateUserInput')
+class UpdateUserInput {
   @Field()
   filter: UserFilter;
 
   @Field()
-  newUserData: UserUpdateInput;
+  newUserData: UpdateUserDataInput;
 }
 
-@ObjectType('UserInfoLogin')
-class UserInfoLogin {
+@ObjectType('LoginUserData')
+class LoginUserData {
   @Field(type => String)
   id?: string;
 
@@ -107,4 +107,13 @@ class UserInfoLogin {
   profiles?: ProfileInfo[];
 }
 
-export { UserInput, UserFilter, UserInfo, UserInfoLogin, UserLoginInput, newUserAdminInput, UpdateUser, UserUpdateInput };
+export {
+  UserData,
+  UserDataInput, 
+  UserFilter,
+  LoginUserData,
+  LoginUserInput,
+  NewUserAdminInput,
+  UpdateUserInput,
+  UpdateUserDataInput
+};

@@ -1,7 +1,7 @@
 import { compareSync } from 'bcrypt';
 import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import { UsersServices } from "../../services/UsersServices";
-import { UserFilter, UserInput, UserInfo, UserInfoLogin, UserLoginInput, newUserAdminInput, UpdateUser } from "./UserSchema";
+import { UserFilter, UserDataInput, UserData, LoginUserData, LoginUserInput, NewUserAdminInput, UpdateUserInput } from "./UserSchema";
 import { UserProfileServices } from "../../services/UserProfilesServices";
 import { ProfilesServices } from "../../services/ProfilesServices";
 import { getUserLogged } from '../../utils/user/getUserLogged';
@@ -9,14 +9,14 @@ import { getAllProfiles } from '../../utils/profile/getAllProfiles';
 import validateToken from '../../utils/user/validateToken';
 import encryptsPassword from '../../utils/user/encryptsPassword';
 
-@Resolver(of => UserInfo)
+@Resolver(of => UserData)
 export class UserResolver {
   private userService = new UsersServices();
   private profileService = new ProfilesServices();
   private userProfileService = new UserProfileServices();
 
-  @Mutation(() => UserInfo)
-  async newUser(@Arg('userInput') userInput: UserInput) {
+  @Mutation(() => UserData)
+  async newUser(@Arg('userInput') userInput: UserDataInput) {
     const newUserData = { ...userInput };
 
     const user = await this.userService.create({ newUserData });
@@ -34,8 +34,8 @@ export class UserResolver {
   }
 
   @Authorized('admin')
-  @Mutation(() => UserInfo)
-  async newUserByAdmin(@Arg('newUserAdminInput') adminInput: newUserAdminInput) {
+  @Mutation(() => UserData)
+  async newUserByAdmin(@Arg('NewUserAdminInput') adminInput: NewUserAdminInput) {
     const newUserData = {
       name: adminInput.name,
       email: adminInput.email,
@@ -73,8 +73,8 @@ export class UserResolver {
   }
 
   @Authorized('admin')
-  @Mutation(() => UserInfo)
-  async updateUser(@Arg('updateUserData') updateUserData: UpdateUser) {
+  @Mutation(() => UserData)
+  async updateUser(@Arg('updateUserData') updateUserData: UpdateUserInput) {
 
     const { filter, newUserData } = updateUserData;
     
@@ -106,15 +106,15 @@ export class UserResolver {
   }
 
   @Authorized('admin')
-  @Mutation(() => UserInfo)
+  @Mutation(() => UserData)
   async deleteUser(@Arg('filter') filter: UserFilter) {
     const userDeleted = await this.userService.delete(filter.email);
 
     return userDeleted;
   }
 
-  @Query(() => UserInfoLogin)
-  async login(@Arg('userLoginInput') userLoginInput: UserLoginInput) {
+  @Query(() => LoginUserData)
+  async login(@Arg('userLoginInput') userLoginInput: LoginUserInput) {
     const userExists = await this.userService.findByEmail(
       userLoginInput.email
     );
@@ -137,7 +137,7 @@ export class UserResolver {
     return loginInfo;
   }
 
-  @Query(() => UserInfo)
+  @Query(() => UserData)
   async validateToken(@Arg('token') token: string) {
     const infoUser = validateToken(token);
 
@@ -145,7 +145,7 @@ export class UserResolver {
   }
 
   @Authorized('admin')
-  @Query(() => [UserInfo])
+  @Query(() => [UserData])
   async users(@Ctx() ctx: any) {
     const users = await this.userService.allUsers();
 
@@ -153,7 +153,7 @@ export class UserResolver {
   }
 
   @Authorized(['admin', 'yourData'])
-  @Query(() => UserInfo)
+  @Query(() => UserData)
   async user(@Arg('filter') filter: UserFilter) {
     if (!filter) return null;
 
@@ -167,7 +167,7 @@ export class UserResolver {
   }
 
   @FieldResolver()
-  async profiles(@Root() userParent: UserInfo, @Ctx() ctx: any) {
+  async profiles(@Root() userParent: UserData, @Ctx() ctx: any) {
 
     let profiles = userParent && userParent.profiles;
 

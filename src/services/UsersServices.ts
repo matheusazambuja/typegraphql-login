@@ -3,7 +3,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import encryptsPassword from "../utils/user/encryptsPassword";
 import { getCustomRepository, Repository } from "typeorm";
 import { getAllProfiles } from "../utils/profile/getAllProfiles";
-import { UserUpdateInput } from "src/resolvers/user/UserSchema";
+import { UserDataUpdateInput } from "src/resolvers/user/UserSchema";
 
 type INewUserData = {
   newUserData: User;
@@ -47,7 +47,7 @@ export class UsersServices {
     return newUserCreated;
   }
 
-  async update(filterEmail: string, updateUserData: UserUpdateInput) {
+  async update(filterEmail: string, updateUserData: UserDataUpdateInput) {
     const userExists = await this.findByEmail(filterEmail);
 
     if (!userExists) throw new Error('Usuário não cadastrado.');

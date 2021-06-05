@@ -1,8 +1,8 @@
 import { Field, InputType, ObjectType } from "type-graphql";
-import { UserInfo } from "../user/UserSchema";
+import { UserData } from "../user/UserSchema";
 
-@ObjectType('ProfileInfo')
-class ProfileInfo {
+@ObjectType('ProfileData')
+class ProfileData {
   @Field(type => String, { nullable: true })
   id?: string;
 
@@ -12,8 +12,8 @@ class ProfileInfo {
   @Field()
   label: string;
 
-  @Field(type => [UserInfo], { nullable: true })
-  users?: UserInfo[];
+  @Field(type => [UserData], { nullable: true })
+  users?: UserData[];
 }
 
 @InputType('ProfileInput')
@@ -32,9 +32,9 @@ class ProfileFilter {
 }
 
 @InputType('ProfileInputUpdate')
-class ProfileInputUpdate {
+class UpdateProfileInput {
   @Field()
   type: string;
 }
 
-export { ProfileInfo, ProfileInput, ProfileFilter, ProfileInputUpdate };
+export { ProfileData, ProfileInput, ProfileFilter, UpdateProfileInput };

@@ -1,14 +1,14 @@
 import { Arg, Authorized, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import { ProfilesServices } from "../../services/ProfilesServices";
-import { ProfileInfo, ProfileInput, ProfileFilter } from "../profile/ProfileSchema";
+import { ProfileData, ProfileInput, ProfileFilter } from "../profile/ProfileSchema";
 import { getAllUsers } from "../../utils/user/getAllUsers";
 
-@Resolver(of => ProfileInfo)
+@Resolver(of => ProfileData)
 export class ProfileResolver {
   private profileService = new ProfilesServices();
 
   @Authorized('admin')
-  @Mutation(() => ProfileInfo)
+  @Mutation(() => ProfileData)
   async newProfile(@Arg('profileInput') profileInput: ProfileInput) {
     const newProfileData = { ...profileInput };
     const profile = await this.profileService.create({ newProfileData });
@@ -17,7 +17,7 @@ export class ProfileResolver {
   }
 
   @Authorized('admin')
-  @Query(() => [ProfileInfo])
+  @Query(() => [ProfileData])
   async profiles() {
     const profiles = await this.profileService.allProfiles();
 
@@ -25,7 +25,7 @@ export class ProfileResolver {
   }
 
   @Authorized('admin')
-  @Query(() => ProfileInfo)
+  @Query(() => ProfileData)
   async profile(@Arg('filter') filter: ProfileFilter) {
     if (!filter) return null;
 
@@ -39,7 +39,7 @@ export class ProfileResolver {
   }
 
   @FieldResolver()
-  async users(@Root() profileParent: ProfileInfo) {
+  async users(@Root() profileParent: ProfileData) {
     const users = await getAllUsers(profileParent.id);
 
     return users;
